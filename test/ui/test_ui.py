@@ -53,8 +53,15 @@ def test_add_card_board(driver):
     assert 2 == 2
     
 # # редактирование карточки
-# def test_edit_card():
-#     return
+def test_edit_card(driver):
+
+    loginPage = LoginPage(driver)
+    loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
+    
+    main_page = MainPage(driver)
+    main_page.edit_card()
+    
+    assert 2 == 2
 
 # # удаление карточки
 # def test_delete_card():
