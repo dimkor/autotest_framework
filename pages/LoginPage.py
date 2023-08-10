@@ -45,11 +45,8 @@ class LoginPage:
         
         username = self.__driver.find_element(By.CSS_SELECTOR, 'span[data-testid="home-team-tab-name"]').text
         username = username.split(':')[0]
-        # current_url = self.__driver.current_url
         
         assert self.__driver.current_url == f'https://trello.com/u/{username}/boards'
-        # token = self.get_auth_token()
-        # DataProvider.add_token(token)
 
     @allure.step('Клик по юзерпику')     
     def open_menu(self) -> None:

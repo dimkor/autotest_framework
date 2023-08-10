@@ -26,18 +26,32 @@ def test_create_board(driver):
 
     main_page = MainPage(driver)
     main_page.create_board()
+
+    assert 1 == 1
+
+# удаление существующей доски,
+def test_delete_board(driver):
     
+    loginPage = LoginPage(driver)
+    loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
+    # token = loginPage.get_auth_token()
+
+    main_page = MainPage(driver)
+    main_page.delete_board()
     
     assert 1 == 1
 
-# # удаление существующей доски,
-# def test_delete_board():
-#     return
-
 # # добавление карточки на доску
-# def test_add_card_board():
-#     return
-
+def test_add_card_board(driver):
+    
+    loginPage = LoginPage(driver)
+    loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
+    
+    main_page = MainPage(driver)
+    main_page.create_card()
+    
+    assert 2 == 2
+    
 # # редактирование карточки
 # def test_edit_card():
 #     return
