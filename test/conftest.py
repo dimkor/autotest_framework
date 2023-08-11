@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 @pytest.fixture
 def driver():
     with allure.step('Открыть и настроить браузер'):
-        driver = webdriver.Chrome()
+        driver = webdriver.Firefox()
         driver.maximize_window()
         driver.implicitly_wait(15)
         yield driver

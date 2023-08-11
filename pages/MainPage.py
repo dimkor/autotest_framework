@@ -121,13 +121,26 @@ class MainPage:
 
         with allure.step('Клик по карточке'):
             
-            button = self.__driver.find_element(By.CSS_SELECTOR, 'span[class="icon-sm icon-edit list-card-operation dark-hover js-open-quick-card-editor js-card-menu"]').is_displayed()
+            hoverable = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]')
+            ActionChains(self.__driver).move_to_element(hoverable).perform()
 
-            hoverable = self.__driver.find_element(By.ID, 'span[class="list-card-title js-card-name"]')
+
+            # button = self.__driver.find_element(By.CSS_SELECTOR, 'span[class="icon-sm icon-edit list-card-operation dark-hover js-open-quick-card-editor js-card-menu"]').is_displayed()
+
+            # hoverable = self.__driver.find_element(By.ID, 'span[class="list-card-title js-card-name"]')
 
             # hoverable = self.__driver.find_element(By.ID, 'span[class="icon-sm icon-edit list-card-operation dark-hover js-open-quick-card-editor js-card-menu"]')
             # ActionChains(self.__driver).move_to_element(hoverable).perform()
             
-            # self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span').click()
+            self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span').click()
+
+            self.__driver.find_element(By.CSS_SELECTOR, 'textarea[class="list-card-edit-title js-edit-card-title"]').clear()
+            self.__driver.find_element(By.CSS_SELECTOR, 'textarea[class="list-card-edit-title js-edit-card-title"]').send_keys('Поправленная карточка 1')
+
+            self.__driver.find_element(By.CSS_SELECTOR, 'input[value="Сохранить"]').click()
+
+            # hoverable = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span')
+            # ActionChains(self.__driver).move_to_element(hoverable).perform()
+            # hoverable.click()
             sleep(3)
-        
+
