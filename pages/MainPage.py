@@ -116,31 +116,45 @@ class MainPage:
             self.__driver.find_element(By.CSS_SELECTOR, 'div[id="board"]').click()
             sleep(5)
     
+    @allure.step('Редактирование карточки') 
     def edit_card(self) -> None:
         self.create_card()
 
         with allure.step('Клик по карточке'):
             
+            #ховер на карточку, чтобы появился карандаш
             hoverable = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]')
             ActionChains(self.__driver).move_to_element(hoverable).perform()
-
-
-            # button = self.__driver.find_element(By.CSS_SELECTOR, 'span[class="icon-sm icon-edit list-card-operation dark-hover js-open-quick-card-editor js-card-menu"]').is_displayed()
-
-            # hoverable = self.__driver.find_element(By.ID, 'span[class="list-card-title js-card-name"]')
-
-            # hoverable = self.__driver.find_element(By.ID, 'span[class="icon-sm icon-edit list-card-operation dark-hover js-open-quick-card-editor js-card-menu"]')
-            # ActionChains(self.__driver).move_to_element(hoverable).perform()
             
+            #Клик по карандашику
             self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span').click()
 
+            #Очистка поля и внесение нового названия карточки
             self.__driver.find_element(By.CSS_SELECTOR, 'textarea[class="list-card-edit-title js-edit-card-title"]').clear()
             self.__driver.find_element(By.CSS_SELECTOR, 'textarea[class="list-card-edit-title js-edit-card-title"]').send_keys('Поправленная карточка 1')
-
+            
+            # Клик по "Сохранить"
             self.__driver.find_element(By.CSS_SELECTOR, 'input[value="Сохранить"]').click()
 
             # hoverable = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span')
             # ActionChains(self.__driver).move_to_element(hoverable).perform()
             # hoverable.click()
-            sleep(3)
-
+            sleep(5)
+    
+    @allure.step('Удаление карточки') 
+    def delete_card(self) -> None:
+        # self.create_card()
+        
+        #ховер на карточку, чтобы появился карандаш
+        hoverable = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]')
+        ActionChains(self.__driver).move_to_element(hoverable).perform()
+        
+        #Клик по карандашику
+        self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span').click()
+        
+        #Клик по "Архивировать"
+        self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="quick-card-editor-archive"]').click()
+    
+    @allure.step('Перемещение карточки') 
+    def move_card(self) -> None:
+        return

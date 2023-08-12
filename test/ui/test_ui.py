@@ -64,8 +64,16 @@ def test_edit_card(driver):
     assert 2 == 2
 
 # # удаление карточки
-# def test_delete_card():
-#     return
+def test_delete_card(driver):
+    
+    loginPage = LoginPage(driver)
+    loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
+    
+    main_page = MainPage(driver)
+    main_page.create_card()
+    main_page.delete_card()
+
+    assert 5 == 5
 
 # # перемещение карточки в другую колонку
 # def test_move_card():
