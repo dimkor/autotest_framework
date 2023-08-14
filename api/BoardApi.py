@@ -42,3 +42,19 @@ class BoardApi:
         resp = requests.delete(path)
 
         return(resp.json())
+    
+    @allure.step("Добавить карточку на доску {name}")
+    def add_card(self, board_id: str) -> dict:    
+        return
+    
+    @allure.step("Редактирование карточки")
+    def edit_card(self, boardname: str) -> dict:
+        return
+    
+    @allure.step("Удаление карточки")
+    def add_card(self, boardname: str) -> dict:
+        return
+    
+    @allure.step("Перемещение карточки в другую колонку")
+    def move_card(self, boardname: str) -> dict:
+        return    
