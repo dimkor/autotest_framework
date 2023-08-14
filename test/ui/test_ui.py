@@ -7,6 +7,8 @@ from selenium.webdriver.common.by import By
 from pages.LoginPage import LoginPage
 from pages.MainPage import MainPage
 
+from api.BoardApi import BoardApi
+
 def test_auth(driver):
     email = "4cfsiixk4dwp@mail.ru"
     password = "dB:7h'HBT'>PwZw"
@@ -20,13 +22,21 @@ def test_auth(driver):
 # создание новой доски
 def test_create_board(driver):
     
+    token = '64cf25acc9f789ff5ee14224/ATTSm2oaSf5kMOOSNhYOGjmZQsVAuLbFPE1FXxbtpdkZ5II9iVw0AdmEytZOApt9NHcE234E623C'
+    base_url = 'https://trello.com/1'
+    
+    api = BoardApi(base_url, token)
+    
     loginPage = LoginPage(driver)
     loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
-    # token = loginPage.get_auth_token()
 
     main_page = MainPage(driver)
     main_page.create_board()
-
+    
+    boardid = main_page.get_boardid()
+    
+    api.delete_board_by_id(boardid)
+    
     assert 1 == 1
 
 # удаление существующей доски,

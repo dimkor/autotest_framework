@@ -47,11 +47,8 @@ class MainPage:
 
         while current_url.endswith(boardname) == False:
             WebDriverWait(self.__driver, 10).until(EC.visibility_of_element_located, (By.CSS_SELECTOR, 'div[data-testid="board-share-button"]'))
-
-        self.__driver.get(f'{self.__driver.current_url}.json')
-        resp = json.loads(self.__driver.find_element(By.TAG_NAME, 'pre').text)
-
-        return resp['id']
+            current_url = self.__driver.current_url
+    
     
     @allure.step('Удаление доски')   
     def delete_board(self) -> None:
@@ -173,3 +170,18 @@ class MainPage:
     @allure.step('Перемещение карточки') 
     def move_card(self) -> None:
         return
+
+    # @allure.step('Перемещение карточки') 
+    def get_boardid(self) -> str:
+        """
+        Получаем id доски из json
+        
+        Returns:
+            str: id доски из json
+        """
+        board_url = self.__driver.current_url
+        self.__driver.get(f'{board_url}.json')
+        resp = json.loads(self.__driver.find_element(By.TAG_NAME, 'pre').text)
+
+        return(resp['id'])
+    

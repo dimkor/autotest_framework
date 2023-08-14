@@ -3,31 +3,42 @@ import allure
 
 class BoardApi:
     
-    token = '64cf25acc9f789ff5ee14224/ATTSm2oaSf5kMOOSNhYOGjmZQsVAuLbFPE1FXxbtpdkZ5II9iVw0AdmEytZOApt9NHcE234E623C'
+    base_url = 'https://api.trello.com/1'
+    api_key = '9a4c098cfc8b126b70975af522e016cf'
+    api_token = 'ATTA84feb27d467f7cefcc9ac45012deec4c4fc476e62b6f578c3393cfc5a881a508A8B85F15'
     
-    @allure.step("URL: {base_url}, токен авторизации {token}")
-    def __init__(self, base_url: str, token: str) -> None:
+    @allure.step("URL: {base_url}, ключ api {api_key}, токен авторизации {api_token}")
+    def __init__(self, base_url: str, api_key: str, api_token: str) -> None:
         self.base_url = base_url
-        self.token = token
+        self.api_key = api_key
+        self.api_token = api_token
         
     @allure.step("Создать доску {name}")
-    def create_board(self, name: str, default_lists=True) -> dict:
-        body = {
-            'defaultLists': default_lists,
-            'name': name,
-            'token': self.token
-        }
+    def create_board(self, boardname: str) -> dict:
+        """
+        Создание доски с указанным именем
+        Args:
+            boardname (str): название доски
 
-        cookie = {"token": self.token}
-        path = "{trello}/boards/".format(trello=self.base_url)
-        resp = requests.post(path, json=body, cookies=cookie)
+        Returns:
+            dict: ответ сервера в json c id и другой информацией
+        """
+        path = f'{self.base_url}/boards/?name={boardname}&key={self.api_key}&token={self.api_token}'
+        resp = requests.post(path)
 
-        return resp.json()
+        return(resp.json())
     
     @allure.step("Удалить доску {id}")    
-    def delete_board_by_id(self, id: str):
-        cookie = {'token': self.token}
-        path = "{trello}/boards/{board_id}".format(trello=self.base_url, board_id=id)
-        resp = requests.delete(path, json=cookie, cookies=cookie)
+    def delete_board_by_id(self, board_id: str) -> dict:
+        """
+        Удаляем доску по её id
+        Args:
+            board_id (str): id доски
 
-        return resp.json()
+        Returns:
+            dict: ответ сервера в json с информацией
+        """
+        path = f'{self.base_url}/boards/{board_id}?key=self.api_key&token={self.api_token}'
+        resp = requests.delete(path)
+
+        return(resp.json())
