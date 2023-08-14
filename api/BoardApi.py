@@ -2,7 +2,8 @@ import requests
 import allure
 
 class BoardApi:
-
+    
+    token = '64cf25acc9f789ff5ee14224/ATTSm2oaSf5kMOOSNhYOGjmZQsVAuLbFPE1FXxbtpdkZ5II9iVw0AdmEytZOApt9NHcE234E623C'
     
     @allure.step("URL: {base_url}, токен авторизации {token}")
     def __init__(self, base_url: str, token: str) -> None:

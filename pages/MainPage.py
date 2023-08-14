@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import ActionChains
-
+import json
 from pages.LoginPage import LoginPage
 
 
@@ -25,18 +25,33 @@ class MainPage:
         self.__driver.get(self.url)
 
     @allure.step('Создание доски')   
-    def create_board(self):
+    def create_board(self) -> str:
+
+        boardname = 'Test board'
+
         self.__driver.find_element(By.CSS_SELECTOR, 'div[class="board-tile mod-add"]').click()
 
         self.__driver.find_element(By.CSS_SELECTOR, 'input[data-testid="create-board-title-input"]').clear()
-        self.__driver.find_element(By.CSS_SELECTOR, 'input[data-testid="create-board-title-input"]').send_keys('test board')
+        self.__driver.find_element(By.CSS_SELECTOR, 'input[data-testid="create-board-title-input"]').send_keys(boardname)
         
         create_button = self.__driver.find_element(By.CSS_SELECTOR, 'button[data-testid="create-board-submit-button"]')
         while create_button.is_enabled() == False:
             WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'button[data-testid="create-board-submit-button"]'))
         
         self.__driver.find_element(By.CSS_SELECTOR, 'button[data-testid="create-board-submit-button"]').click()
-        # sleep(5)
+
+
+        boardname = boardname.lower().replace(' ', '-')
+
+        current_url = self.__driver.current_url
+
+        while current_url.endswith(boardname) == False:
+            WebDriverWait(self.__driver, 10).until(EC.visibility_of_element_located, (By.CSS_SELECTOR, 'div[data-testid="board-share-button"]'))
+
+        self.__driver.get(f'{self.__driver.current_url}.json')
+        resp = json.loads(self.__driver.find_element(By.TAG_NAME, 'pre').text)
+
+        return resp['id']
     
     @allure.step('Удаление доски')   
     def delete_board(self) -> None:
