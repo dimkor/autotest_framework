@@ -128,7 +128,7 @@ class MainPage:
             sleep(5)
     
     @allure.step('Редактирование карточки') 
-    def edit_card(self) -> None:
+    def update_card(self) -> None:
         self.create_card()
 
         with allure.step('Клик по карточке'):

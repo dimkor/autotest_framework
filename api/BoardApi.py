@@ -42,22 +42,48 @@ class BoardApi:
         resp = requests.delete(path)
 
         return(resp.json())
-    
-    @allure.step("Добавить карточку на доску {name}")
-    def add_card(self, board_id: str) -> dict:    
-        return
+
+    @allure.step("Создать список на доске")
+    def create_list_on_board(self, board_id: str, list_name: str) -> dict:
+        """
+        Создаём список на доске
+        
+        Args:
+            board_id (str): id доски, в которой создаётся список
+            list_name (str): имя списка
+
+        Returns:
+            dict: ответ сервера
+        """
+        path = f'{self.base_url}/boards/{board_id}/lists?name={list_name}&key={self.api_key}&token={self.api_token}'
+        
+        resp = requests.post(path)
+        return( resp.json() )
     
     @allure.step("Редактирование карточки")
-    def edit_card(self, boardname: str) -> dict:
-        return
+    def update_card(self, card_id: str, new_name: str) -> dict:
+        
+        path = f'{self.base_url}/cards/{card_id}?key={self.api_key}&token={self.api_token}&name={new_name}'
+        
+        resp = requests.put(path)
+        
+        return( resp.json() )
     
     @allure.step("Удаление карточки")
-    def add_card(self, boardname: str) -> dict:
-        return
+    def delete_card(self, card_id: str) -> dict:
+        
+        path = f'{self.base_url}/cards/{card_id}?key={self.api_key}&token={self.api_token}'
+        resp = requests.delete(path)
+        
+        return( resp.json() )
     
-    @allure.step("Перемещение карточки в другую колонку")
-    def move_card(self, boardname: str) -> dict:
-        return 
+    @allure.step("Перемещение карточки в другой список")
+    def move_card(self, card_id: str, new_list_id: str) -> dict:
+        
+        path = f'{self.base_url}/cards/{card_id}?key={self.api_token}&token={self.api_token}&idList={new_list_id}'
+        resp = requests.put(path)
+        
+        return resp.json()
 
     @allure.step("Получить список всех досок")
     def get_all_boards(self) -> dict:
@@ -66,3 +92,32 @@ class BoardApi:
         resp = requests.get(path)
 
         return(resp.json())
+
+    @allure.step("Создать карточку внутри списка")
+    def create_card_in_list(self, list_id: str, card_name: str) -> dict:
+        
+        path = f'{self.base_url}/cards?idList={list_id}&key={self.api_key}&token={self.api_token}&name={card_name}'
+        resp = requests.post(path)
+        return(resp.json())
+    
+    @allure.step("Получить список, в котором лежит карточка")
+    def get_list_of_a_card(self, card_id: str) -> dict:
+        """
+        Получить список, в котором лежит карточка
+        
+        Args:
+            card_id (str): id карточки
+        Returns:
+            dict: json с id листа, в котором лежит карточка
+        """
+        path = f'/cards/{card_id}/list?key={self.api_key}&token={self.api_token}'
+        resp = requests.get(path)
+        
+        return( resp.json() )
+    
+    @allure.step("Получить список карточек в листе")
+    def get_cards_in_list(self, card_id: str) -> dict:
+        
+        path = f'{self.base_url}/lists/{card_id}/cards?key={self.api_key}&token={self.api_token}'
+        resp = requests.get(path)
+        return( resp.json() )

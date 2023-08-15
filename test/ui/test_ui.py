@@ -64,13 +64,13 @@ def test_add_card_to_board(driver):
     assert 2 == 2
     
 @allure.step('Редактирование карточки')
-def test_edit_card(driver):
+def test_update_card(driver):
 
     loginPage = LoginPage(driver)
     loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
     
     main_page = MainPage(driver)
-    main_page.edit_card()
+    main_page.update_card()
     
     assert 2 == 2
 
