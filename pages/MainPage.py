@@ -25,9 +25,9 @@ class MainPage:
         self.__driver.get(self.url)
 
     @allure.step('Создание доски')   
-    def create_board(self) -> str:
+    def create_board(self, boardname: str) -> str:
 
-        boardname = 'Test board'
+        # boardname = 'Test board'
 
         self.__driver.find_element(By.CSS_SELECTOR, 'div[class="board-tile mod-add"]').click()
 
@@ -40,7 +40,6 @@ class MainPage:
         
         self.__driver.find_element(By.CSS_SELECTOR, 'button[data-testid="create-board-submit-button"]').click()
 
-
         boardname = boardname.lower().replace(' ', '-')
 
         current_url = self.__driver.current_url
@@ -51,10 +50,10 @@ class MainPage:
     
     
     @allure.step('Удаление доски')   
-    def delete_board(self) -> None:
-        
+    def delete_board(self, boardname: str) -> None:
+    
         with allure.step('Клик на доску "___"'):
-            WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'div[title="test board"]'))
+            WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, f'div[title="{boardname}"]'))
             self.__driver.find_element(By.CSS_SELECTOR, 'div[title="test board"]').click()
         
         WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'h1[data-testid="board-name-display"]'))
@@ -80,7 +79,7 @@ class MainPage:
             WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'button[data-testid="close-board-delete-board-button"]'))
             self.__driver.find_element(By.CSS_SELECTOR, 'button[data-testid="close-board-delete-board-button"]').click()
         
-        with allure.step('клик на "Удалить" в модальном окне'):
+        with allure.step('Rлик на "Удалить" в модальном окне'):
             WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'button[data-testid="close-board-delete-board-confirm-button"]'))
             self.__driver.find_element(By.CSS_SELECTOR, 'button[data-testid="close-board-delete-board-confirm-button"]').click()
         

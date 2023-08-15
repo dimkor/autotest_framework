@@ -9,6 +9,7 @@ from pages.MainPage import MainPage
 
 from api.BoardApi import BoardApi
 
+@allure.step('Авторизация')
 def test_auth(driver):
     email = "4cfsiixk4dwp@mail.ru"
     password = "dB:7h'HBT'>PwZw"
@@ -19,7 +20,7 @@ def test_auth(driver):
     
     assert loginPage.return_user_email() == email
 
-# создание новой доски
+@allure.step('Создание новой доски')
 def test_create_board(driver):
     
     token = '64cf25acc9f789ff5ee14224/ATTSm2oaSf5kMOOSNhYOGjmZQsVAuLbFPE1FXxbtpdkZ5II9iVw0AdmEytZOApt9NHcE234E623C'
@@ -31,7 +32,7 @@ def test_create_board(driver):
     loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
 
     main_page = MainPage(driver)
-    main_page.create_board()
+    main_page.create_board("blablablah")
     
     boardid = main_page.get_boardid()
     
@@ -39,7 +40,7 @@ def test_create_board(driver):
     
     assert 1 == 1
 
-# удаление существующей доски,
+@allure.step('Удаление существующей доски')
 def test_delete_board(driver):
     
     loginPage = LoginPage(driver)
@@ -51,8 +52,8 @@ def test_delete_board(driver):
     
     assert 1 == 1
 
-# # добавление карточки на доску
-def test_add_card_board(driver):
+@allure.step('Добавление карточки на доску')
+def test_add_card_to_board(driver):
     
     loginPage = LoginPage(driver)
     loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
@@ -62,7 +63,7 @@ def test_add_card_board(driver):
     
     assert 2 == 2
     
-# # редактирование карточки
+@allure.step('Редактирование карточки')
 def test_edit_card(driver):
 
     loginPage = LoginPage(driver)
@@ -73,7 +74,7 @@ def test_edit_card(driver):
     
     assert 2 == 2
 
-# # удаление карточки
+@allure.step('Удаление карточки')
 def test_delete_card(driver):
     
     loginPage = LoginPage(driver)
@@ -85,6 +86,6 @@ def test_delete_card(driver):
 
     assert 5 == 5
 
-# # перемещение карточки в другую колонку
-# def test_move_card():
-#     return
+@allure.step('Перемещение карточки в другую колонку')
+def test_move_card():
+    return

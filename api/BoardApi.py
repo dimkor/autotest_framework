@@ -13,7 +13,7 @@ class BoardApi:
         self.api_key = api_key
         self.api_token = api_token
         
-    @allure.step("Создать доску {name}")
+    @allure.step("Создать доску {boardname}")
     def create_board(self, boardname: str) -> dict:
         """
         Создание доски с указанным именем
@@ -28,7 +28,7 @@ class BoardApi:
 
         return(resp.json())
     
-    @allure.step("Удалить доску {id}")    
+    @allure.step("Удалить доску {board_id}")    
     def delete_board_by_id(self, board_id: str) -> dict:
         """
         Удаляем доску по её id
@@ -38,7 +38,7 @@ class BoardApi:
         Returns:
             dict: ответ сервера в json с информацией
         """
-        path = f'{self.base_url}/boards/{board_id}?key=self.api_key&token={self.api_token}'
+        path = f'{self.base_url}/boards/{board_id}?key={self.api_key}&token={self.api_token}'
         resp = requests.delete(path)
 
         return(resp.json())
@@ -57,4 +57,12 @@ class BoardApi:
     
     @allure.step("Перемещение карточки в другую колонку")
     def move_card(self, boardname: str) -> dict:
-        return    
+        return 
+
+    @allure.step("Получить список всех досок")
+    def get_all_boards(self) -> dict:
+
+        path = f'{self.base_url}/members/me/boards?key={self.api_key}&token={self.api_token}'
+        resp = requests.get(path)
+
+        return(resp.json())
