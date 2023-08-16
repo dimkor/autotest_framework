@@ -10,7 +10,7 @@ def driver():
     with allure.step('Открыть и настроить браузер'):
         driver = webdriver.Chrome()
         driver.maximize_window()
-        driver.implicitly_wait(4)
+        driver.implicitly_wait(10)
         yield driver
         
     with allure.step("Закрыть браузер"):
