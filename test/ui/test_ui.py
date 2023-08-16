@@ -10,7 +10,7 @@ from pages.MainPage import MainPage
 from api.BoardApi import BoardApi
 
 @allure.step('Авторизация')
-def test_auth(driver):
+def test_auth(driver: webdriver):
     email = "4cfsiixk4dwp@mail.ru"
     password = "dB:7h'HBT'>PwZw"
     
@@ -21,64 +21,63 @@ def test_auth(driver):
     assert loginPage.return_user_email() == email
 
 @allure.step('Создание новой доски')
-def test_create_board(driver):
+def test_create_board(driver: webdriver, api_client: BoardApi):
     
-    token = '64cf25acc9f789ff5ee14224/ATTSm2oaSf5kMOOSNhYOGjmZQsVAuLbFPE1FXxbtpdkZ5II9iVw0AdmEytZOApt9NHcE234E623C'
-    base_url = 'https://trello.com/1'
-    
-    api = BoardApi(base_url, token)
-    
-    loginPage = LoginPage(driver)
-    loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
-
     main_page = MainPage(driver)
-    main_page.create_board("blablablah")
+
+    before = len(api_client.get_all_boards())
+
+    main_page.create_board("Имя доски")
     
-    boardid = main_page.get_boardid()
+    after = len(api_client.get_all_boards())
+
+    boardid = main_page.get_board_id()
     
-    api.delete_board_by_id(boardid)
+    api_client.delete_board_by_id(boardid)
     
-    assert 1 == 1
+    assert before < after
 
 @allure.step('Удаление существующей доски')
-def test_delete_board(driver):
-    
-    loginPage = LoginPage(driver)
-    loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
-    # token = loginPage.get_auth_token()
+def test_delete_board(driver: webdriver, api_client: BoardApi):
+    boardname = 'Имя доски'
+    api_client.create_board(boardname)
+
+    before = len(api_client.get_all_boards())
 
     main_page = MainPage(driver)
-    main_page.delete_board()
+
+    main_page.delete_board(boardname)
     
-    assert 1 == 1
+    after = len(api_client.get_all_boards())
+
+    assert before > after
 
 @allure.step('Добавление карточки на доску')
-def test_add_card_to_board(driver):
-    
-    loginPage = LoginPage(driver)
-    loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
-    
+def test_add_card_to_board(driver: webdriver, api_client: BoardApi):
+
     main_page = MainPage(driver)
+    
     main_page.create_card()
     
+    boardid = main_page.get_board_id()
+
+    cards = api_client.get_cards_on_board(boardid)
+
     assert 2 == 2
     
 @allure.step('Редактирование карточки')
-def test_update_card(driver):
+def test_update_card(driver: webdriver, api_client: BoardApi):
 
-    loginPage = LoginPage(driver)
-    loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
-    
     main_page = MainPage(driver)
+
     main_page.update_card()
     
+    boardid = main_page.get_board_id()
+
     assert 2 == 2
 
 @allure.step('Удаление карточки')
-def test_delete_card(driver):
-    
-    loginPage = LoginPage(driver)
-    loginPage.auth("4cfsiixk4dwp@mail.ru", "dB:7h'HBT'>PwZw")
+def test_delete_card(driver: webdriver, api_client: BoardApi):
     
     main_page = MainPage(driver)
     main_page.create_card()
@@ -87,5 +86,5 @@ def test_delete_card(driver):
     assert 5 == 5
 
 @allure.step('Перемещение карточки в другую колонку')
-def test_move_card():
+def test_move_card(driver: webdriver, api_client: BoardApi):
     return
