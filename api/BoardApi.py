@@ -3,10 +3,6 @@ import allure
 
 class BoardApi:
     
-    base_url = 'https://api.trello.com/1'
-    api_key = '9a4c098cfc8b126b70975af522e016cf'
-    api_token = 'ATTA84feb27d467f7cefcc9ac45012deec4c4fc476e62b6f578c3393cfc5a881a508A8B85F15'
-    
     @allure.step("URL: {base_url}, ключ api {api_key}, токен авторизации {api_token}")
     def __init__(self, base_url: str, api_key: str, api_token: str) -> None:
         self.base_url = base_url
@@ -154,7 +150,7 @@ class BoardApi:
         
         return( resp.json() )
     
-    @allure.step("Получить список карточек в листе")
+    @allure.step("Получить список карточек из листа")
     def get_cards_in_list(self, card_id: str) -> dict:
         """
         Получить список карточек в листе
@@ -168,8 +164,14 @@ class BoardApi:
         resp = requests.get(path)
         return( resp.json() )
     
-    @allure.step("Получить список карточек на листе")
+    @allure.step("Получить список карточек на доске")
     def get_cards_on_board(self, board_id: str) -> dict:
         path = f'{self.base_url}/boards/{board_id}/cards?key={self.api_key}&token={self.api_token}'
+        resp = requests.get(path)
+        return(resp.json())
+    
+    @allure.step("Получить списки на доске")
+    def get_lists_on_board(self, board_id: str) -> dict:
+        path = f'{self.base_url}/boards/{board_id}/lists?key={self.api_key}&token={self.api_token}'
         resp = requests.get(path)
         return(resp.json())

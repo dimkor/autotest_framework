@@ -1,6 +1,6 @@
 import json
 
-my_file = open('test_data.json')
+my_file = open(file='test_data.json', mode='r', encoding='utf_8')
 global_data = json.load(my_file)
 
 class DataProvider:
@@ -10,13 +10,3 @@ class DataProvider:
 
     def get(self, prop: str) -> str:
         return self.data.get(prop)
-
-    def getint(self, prop: str) -> int:
-        val = self.data.get(prop)
-        return int(val)
-
-    def add_token(self, token: dict) -> None:
-        global_data.update(token)
-
-    def get_token(self) -> str:
-        return self.data.get("token")

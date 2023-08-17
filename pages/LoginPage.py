@@ -5,11 +5,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webdriver import WebDriver
-# from testdata.DataProvider import DataProvider
+from testdata.DataProvider import DataProvider
 
 class LoginPage:
     
-    base_url = 'https://trello.com/'
+    base_url = DataProvider().get('url')
     
     def __init__(self, driver: WebDriver) -> None:
         self.__driver = driver
@@ -42,11 +42,6 @@ class LoginPage:
             self.__driver.find_element(By.CSS_SELECTOR, 'button[id="login-submit"]').click()
 
         WebDriverWait(self.__driver, 15).until(EC.visibility_of_element_located, (By.CSS_SELECTOR, '.boards-page-section-header-name'))
-        
-        username = self.__driver.find_element(By.CSS_SELECTOR, 'span[data-testid="home-team-tab-name"]').text
-        username = username.split(':')[0]
-        
-        assert self.__driver.current_url == f'https://trello.com/u/{username}/boards'
 
     @allure.step('Клик по юзерпику')     
     def open_menu(self) -> None:
@@ -57,14 +52,3 @@ class LoginPage:
     def return_user_email(self) -> str:
         locator = 'div[data-testid="account-menu-account-section"]>div>div:last-child>div:last-child'
         return self.__driver.find_element(By.CSS_SELECTOR, locator).text
-    
-    @allure.step('Клик по юзерпику')
-    def get_auth_token(self) -> str:
-        cookies = self.__driver.get_cookies()
-        for cookie in cookies:
-            if cookie['name'] == 'token':
-                token = cookie['value']
-                break
-        
-        self.__driver.implicitly_wait(15)
-        return {'token': token}

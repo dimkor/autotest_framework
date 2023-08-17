@@ -9,6 +9,7 @@ from selenium.webdriver import ActionChains
 import json
 from selenium.webdriver.common.keys import Keys
 from pages.LoginPage import LoginPage
+from testdata.DataProvider import DataProvider
 import urllib.parse
 
 class MainPage:
@@ -34,20 +35,28 @@ class MainPage:
             my_try = +1
             if my_try == 9:
                 break
-
+                
     @allure.step('Создание доски')   
     def create_board(self, boardname: str) -> str:
-
-        self.__driver.find_element(By.CSS_SELECTOR, 'div[class="board-tile mod-add"]').click()
-
-        self.__driver.find_element(By.CSS_SELECTOR, 'input[data-testid="create-board-title-input"]').clear()
-        self.__driver.find_element(By.CSS_SELECTOR, 'input[data-testid="create-board-title-input"]').send_keys(boardname)
+        """
+        Создание доски
         
-        create_button = self.__driver.find_element(By.CSS_SELECTOR, 'button[data-testid="create-board-submit-button"]')
-        while create_button.is_enabled() == False:
-            WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'button[data-testid="create-board-submit-button"]'))
+        Returns:
+            boardname (str): имя доски
+        """        
+        # with allure.step(''):
+        with allure.step('Клик на кнопку "Создать доску"'):
+            self.__driver.find_element(By.CSS_SELECTOR, 'div[class="board-tile mod-add"]').click()
         
-        self.__driver.find_element(By.CSS_SELECTOR, 'button[data-testid="create-board-submit-button"]').click()
+        with allure.step('Заполнение поля "Заголовок доски"'):
+            self.__driver.find_element(By.CSS_SELECTOR, 'input[data-testid="create-board-title-input"]').clear()
+            self.__driver.find_element(By.CSS_SELECTOR, 'input[data-testid="create-board-title-input"]').send_keys(boardname)
+        
+        with allure.step('Клик по кнопке "Создать"'):
+            create_button = self.__driver.find_element(By.CSS_SELECTOR, 'button[data-testid="create-board-submit-button"]')
+            while create_button.is_enabled() == False:
+                WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'button[data-testid="create-board-submit-button"]'))
+            self.__driver.find_element(By.CSS_SELECTOR, 'button[data-testid="create-board-submit-button"]').click()
 
         boardname = urllib.parse.quote(boardname.lower().replace(' ', '-'))
 
@@ -58,11 +67,14 @@ class MainPage:
             current_url = self.__driver.current_url
 
     @allure.step('Удаление доски')   
-    def delete_board(self, boardname: str) -> None:
-    
-        with allure.step('Клик на доску "___"'):
-            WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, f'div[title="{boardname}"]'))
-            self.__driver.find_element(By.CSS_SELECTOR, f'div[title="{boardname}"]').click()
+    def delete_board(self, board: dict) -> None:
+        """
+        Удаление доски
+        
+        Returns:
+            board (dict): json с информацией о доске
+        """           
+        self.__driver.get(board['url'])
         
         WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'h1[data-testid="board-name-display"]'))
         
@@ -70,14 +82,9 @@ class MainPage:
             WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'button[aria-label="Меню"]'))
             self.__driver.find_element(By.CSS_SELECTOR, 'button[aria-label="Меню"]').click()
         
-        with allure.step('Клик на "Ещё"'):
-            WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'a[class="board-menu-navigation-item-link js-open-more"]'))
-            self.__driver.find_element(By.CSS_SELECTOR, 'a[class="board-menu-navigation-item-link js-open-more"]').click()
-            # self.__driver.find_element(By.CSS_SELECTOR, 'a[class="board-menu-navigation-item-link js-open-more"]').click()
-        
         with allure.step('Клик на "Закрыть доску"'):
-            WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'a[class="board-menu-navigation-item-link js-close-board"]'))
-            self.__driver.find_element(By.CSS_SELECTOR, 'a[class="board-menu-navigation-item-link js-close-board"]').click()
+            WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'ul[class="board-menu-navigation"]>li:last-child'))
+            self.__driver.find_element(By.CSS_SELECTOR, 'ul[class="board-menu-navigation"]>li:last-child').click()
         
         with allure.step('Клик на "Закрыть"'):
             WebDriverWait(self.__driver, 10).until(EC.element_to_be_clickable, (By.CSS_SELECTOR, 'input[class^="js-confirm"]'))
@@ -94,23 +101,17 @@ class MainPage:
         self.__driver.get(self.url)
 
     @allure.step('Создание карточки')    
-    def create_card(self, boardname: str, card_name: str) -> None:
+    def create_card(self, board: dict, list: dict, card_name: str, lists: dict) -> None:
+        """
+        Создание карточки
         
-        self.create_board(boardname)
-        
-        with allure.step('Клик по "Добавить список"'):
-            WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located, (By.CSS_SELECTOR, 'div[id="board"]>div:last-child'))
-            self.__driver.find_element(By.CSS_SELECTOR, 'div[id="board"]>div:last-child').click()
-        
-        with allure.step('Заполнение названия карточки'):
-            WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located, (By.CSS_SELECTOR, 'input[class="list-name-input"]'))
-            # self.__driver.find_element(By.LINK_TEXT, f'{card_name}').click()
-            self.__driver.find_element(By.CSS_SELECTOR, 'input[class="list-name-input"]').clear()
-            self.__driver.find_element(By.CSS_SELECTOR, 'input[class="list-name-input"]').send_keys('Список 1')
-        
-        with allure.step('Клик по кнопке "Добавить список"'):
-            WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located, (By.CSS_SELECTOR, 'input[value="Добавить список"]'))
-            self.__driver.find_element(By.CSS_SELECTOR, 'input[type="submit"]').click()
+        Args:
+            board (dict): json с информацией о доске
+            list (dict): json с информацией о списке
+            card_name (str): имя карточки
+            lists (dict): json с информацией о списках на доске
+        """
+        self.__driver.get(board['url'])
         
         with allure.step('Клик по "Добавить карточку"'):
             WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located, (By.CSS_SELECTOR, 'a[class="open-card-composer js-open-card-composer"]'))
@@ -125,45 +126,67 @@ class MainPage:
             self.__driver.find_element(By.CSS_SELECTOR, 'div[id="board"]').click()
 
     @allure.step('Редактирование карточки') 
-    def update_card(self, boardname: str, card_name: str, new_card_name: str) -> None:
-        
-        self.create_card(boardname, card_name)
-        
-        WebDriverWait(self.__driver, 10).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, 'a[data-testid="trello-card"]'), f'{card_name}'))
+    def update_card(self, card: dict, new_card_name: str) -> None:
+        """
+        Редактирование карточки
+
+        Args:
+            card (dict): json с информацией о карточке
+            new_card_name (str): новое имя карточки
+        """
+        self.__driver.get(card['url'])
         
         with allure.step('Клик по карточке'):
-
-            self.__driver.find_element(By.LINK_TEXT, f'{card_name}').click()
-            WebDriverWait(self.__driver, 10).until(EC.visibility_of, (By.CSS_SELECTOR, 'textarea.js-card-detail-title-input'))
+            # self.__driver.find_element(By.LINK_TEXT, '{card_name}'.format(card_name=card['name'])).click()
+            WebDriverWait(self.__driver, 10).until(EC.visibility_of, (By.CSS_SELECTOR, 'textarea[class="mod-card-back-title js-card-detail-title-input"]'))
             self.__driver.find_element(By.CSS_SELECTOR, 'textarea.js-card-detail-title-input').clear()
             self.__driver.find_element(By.CSS_SELECTOR, 'textarea.js-card-detail-title-input').send_keys(new_card_name)
             self.__driver.find_element(By.CSS_SELECTOR, 'textarea.js-card-detail-title-input').send_keys(Keys.RETURN)
 
             self.__driver.find_element(By.CSS_SELECTOR, 'a[aria-label="Закрыть диалоговое окно"]').click()
 
-    
     @allure.step('Удаление карточки') 
-    def delete_card(self, boardname: str, card_name: str) -> None:
-        # self.create_card()
-        
-        self.create_card(boardname, card_name)
-        
-        # WebDriverWait(self.__driver, 10).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, 'a[data-testid="trello-card"]'), f'{card_name}'))
-        
-        with allure.step('Клик по карточке'):
+    def delete_card(self, board: dict, card: dict) -> None:
+        """
+        Удаление карточки
 
-            self.__driver.find_element(By.LINK_TEXT, f'{card_name}').click()
-            WebDriverWait(self.__driver, 10).until(EC.visibility_of, (By.CSS_SELECTOR, 'textarea.js-card-detail-title-input'))
-
+        Args:
+            board (dict): json c информацией о доске
+            card (dict): json c информацией о карточке
+        """
+        self.__driver.get(card['url'])
+        
+        with allure.step('Клик по кнопке "Архивация"'):       
+            WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located, (By.CSS_SELECTOR, 'a[title="Архивация"]'))
             self.__driver.find_element(By.CSS_SELECTOR, 'a[title="Архивация"]').click()
+        
+        with allure.step('Клик по кнопке "Удалить"'):       
+            WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located, (By.CSS_SELECTOR, 'a[title="Удалить"]'))
             self.__driver.find_element(By.CSS_SELECTOR, 'a[title="Удалить"]').click()
+        
+        with allure.step('Клик по кнопке "Удалить" в модальном окне'):       
+            WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located, (By.CSS_SELECTOR, 'input[value="Удалить"]'))
             self.__driver.find_element(By.CSS_SELECTOR, 'input[value="Удалить"]').click()
-    
+        
+        with allure.step('Ожидаем, что url изменится'):
+            WebDriverWait(self.__driver, 10).until(EC.url_to_be(board['url']))
+                
     @allure.step('Перемещение карточки') 
-    def move_card(self) -> None:
-        return
+    def move_card(self, board: dict) -> None:
+        """
+        Перемещение карточки
 
-    # @allure.step('Перемещение карточки') 
+        Args:
+            board (dict): json с информацией о доске
+        """
+        self.__driver.get(board['url'])
+        
+        with allure.step('Клик и холд карточки и перенос во второй список'):
+            draggable = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]')
+            droppable = self.__driver.find_element(By.CSS_SELECTOR, '#board>div:nth-child(2)')
+            ActionChains(self.__driver).drag_and_drop(draggable, droppable).perform()
+    
+    @allure.step('Получить id доски') 
     def get_board_id(self) -> str:
         """
         Получаем id доски из json
@@ -176,4 +199,3 @@ class MainPage:
         resp = json.loads(self.__driver.find_element(By.TAG_NAME, 'pre').text)
 
         return(resp['id'])
-    

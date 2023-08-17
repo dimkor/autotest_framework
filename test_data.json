@@ -1,0 +1,14 @@
+{
+    "url": "https://trello.com/",
+    "email": "4cfsiixk4dwp@mail.ru",
+    "password": "dB:7h'HBT'>PwZw",
+    "api_key": "9a4c098cfc8b126b70975af522e016cf",
+    "api_token": "ATTA84feb27d467f7cefcc9ac45012deec4c4fc476e62b6f578c3393cfc5a881a508A8B85F15",
+    "api_url": "https://api.trello.com/1",
+    "boardname": "Имя доски",
+    "listname": "Имя списка",
+    "listname 1": "Имя списка 1",
+    "listname 2": "Имя списка 2",
+    "cardname": "Карточка №1",
+    "new_card_name": "Изменённая Карточка №1"
+}
