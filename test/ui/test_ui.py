@@ -90,13 +90,17 @@ def test_update_card(driver: webdriver, api_client: BoardApi):
     
 @allure.step('Удаление карточки')
 def test_delete_card(driver: webdriver, api_client: BoardApi):
-    
+
+    board_name = 'Имя доски'
+    card_name = 'Карточка #1'
+    # new_card_name = f'Изменённая {card_name}'
+
     main_page = MainPage(driver)
-    main_page.create_card()
-    main_page.delete_card()
+    main_page.create_card(board_name, card_name)
+    main_page.delete_card(board_name, card_name)
 
     assert 5 == 5
 
 @allure.step('Перемещение карточки в другую колонку')
 def test_move_card(driver: webdriver, api_client: BoardApi):
-    return
+    assert 1 == 2

@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import ActionChains
 import json
-
+from selenium.webdriver.common.keys import Keys
 from pages.LoginPage import LoginPage
 import urllib.parse
 
@@ -104,6 +104,7 @@ class MainPage:
         
         with allure.step('Заполнение названия карточки'):
             WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located, (By.CSS_SELECTOR, 'input[class="list-name-input"]'))
+            # self.__driver.find_element(By.LINK_TEXT, f'{card_name}').click()
             self.__driver.find_element(By.CSS_SELECTOR, 'input[class="list-name-input"]').clear()
             self.__driver.find_element(By.CSS_SELECTOR, 'input[class="list-name-input"]').send_keys('Список 1')
         
@@ -127,49 +128,36 @@ class MainPage:
     def update_card(self, boardname: str, card_name: str, new_card_name: str) -> None:
         
         self.create_card(boardname, card_name)
-
-        # WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located, (By.CSS_SELECTOR, 'a[data-testid="trello-card"]'))
+        
         WebDriverWait(self.__driver, 10).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, 'a[data-testid="trello-card"]'), f'{card_name}'))
+        
         with allure.step('Клик по карточке'):
-            
-            hidden_element = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span')
-            while hidden_element.is_displayed() == False:
-                #ховер на карточку, чтобы появился карандаш
-                hoverable = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]')
-                ActionChains(self.__driver).move_to_element(hoverable).perform()
-            
-                #Клик по карандашику
-                WebDriverWait(self.__driver, 10).until(EC.visibility_of, (By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span'))
-            
-                # state = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span').is_displayed()
-            
-                self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span').click()
 
-            #Очистка поля и внесение нового названия карточки
-            self.__driver.find_element(By.CSS_SELECTOR, 'textarea[class="list-card-edit-title js-edit-card-title"]').clear()
-            self.__driver.find_element(By.CSS_SELECTOR, 'textarea[class="list-card-edit-title js-edit-card-title"]').send_keys(new_card_name)
-            
-            # Клик по "Сохранить"
-            self.__driver.find_element(By.CSS_SELECTOR, 'input[value="Сохранить"]').click()
+            self.__driver.find_element(By.LINK_TEXT, f'{card_name}').click()
+            WebDriverWait(self.__driver, 10).until(EC.visibility_of, (By.CSS_SELECTOR, 'textarea.js-card-detail-title-input'))
+            self.__driver.find_element(By.CSS_SELECTOR, 'textarea.js-card-detail-title-input').clear()
+            self.__driver.find_element(By.CSS_SELECTOR, 'textarea.js-card-detail-title-input').send_keys(new_card_name)
+            self.__driver.find_element(By.CSS_SELECTOR, 'textarea.js-card-detail-title-input').send_keys(Keys.RETURN)
 
-            # hoverable = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span')
-            # ActionChains(self.__driver).move_to_element(hoverable).perform()
-            # hoverable.click()
-            # sleep(5)
+            self.__driver.find_element(By.CSS_SELECTOR, 'a[aria-label="Закрыть диалоговое окно"]').click()
+
     
     @allure.step('Удаление карточки') 
-    def delete_card(self) -> None:
+    def delete_card(self, boardname: str, card_name: str) -> None:
         # self.create_card()
         
-        #ховер на карточку, чтобы появился карандаш
-        hoverable = self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]')
-        ActionChains(self.__driver).move_to_element(hoverable).perform()
+        self.create_card(boardname, card_name)
         
-        #Клик по карандашику
-        self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="trello-card"]>span').click()
+        # WebDriverWait(self.__driver, 10).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, 'a[data-testid="trello-card"]'), f'{card_name}'))
         
-        #Клик по "Архивировать"
-        self.__driver.find_element(By.CSS_SELECTOR, 'a[data-testid="quick-card-editor-archive"]').click()
+        with allure.step('Клик по карточке'):
+
+            self.__driver.find_element(By.LINK_TEXT, f'{card_name}').click()
+            WebDriverWait(self.__driver, 10).until(EC.visibility_of, (By.CSS_SELECTOR, 'textarea.js-card-detail-title-input'))
+
+            self.__driver.find_element(By.CSS_SELECTOR, 'a[title="Архивация"]').click()
+            self.__driver.find_element(By.CSS_SELECTOR, 'a[title="Удалить"]').click()
+            self.__driver.find_element(By.CSS_SELECTOR, 'input[value="Удалить"]').click()
     
     @allure.step('Перемещение карточки') 
     def move_card(self) -> None:
