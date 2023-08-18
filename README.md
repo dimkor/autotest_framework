@@ -14,7 +14,6 @@
 - selenium
 - webdriver manager
 - requests
-- _sqlalchemy_
 - allure
 - configparser
 - json
@@ -26,6 +25,23 @@
 - ./api - хелперы для работы с API
 - ./testdata - провайдер тестовых данных
     - test_data.json
+- ./configuration - провайдер настроек
+    - test_config.ini - настройки для тестов
+
+### Данные для тестов
+Для проведения тестов необходимо заполнить значения в файле test_data.json:  
+```
+"email": ""
+"password": ""
+"api_key": ""
+"api_token": ""
+```
+
+### Команды запуска тестов
+-тесты UI:  
+```pytest -v -m ui```  
+-тесты API:  
+```pytest -v -m api``` 
 
 ### Полезные ссылки
 - [Подсказка по markdown](https://www.markdownguide.org/cheat-sheet/)
