@@ -11,6 +11,7 @@ from api.BoardApi import BoardApi
 
 from testdata.DataProvider import DataProvider
 
+@pytest.mark.ui
 @allure.step('Авторизация')
 def test_auth(driver: webdriver, test_data: DataProvider):
     
@@ -23,6 +24,7 @@ def test_auth(driver: webdriver, test_data: DataProvider):
     
     assert loginPage.return_user_email() == email
 
+@pytest.mark.ui
 @allure.step('Создание новой доски')
 def test_create_board(driver: webdriver, api_client: BoardApi, test_data: DataProvider):
     
@@ -42,6 +44,7 @@ def test_create_board(driver: webdriver, api_client: BoardApi, test_data: DataPr
     
     assert before < after
 
+@pytest.mark.ui
 @allure.step('Удаление существующей доски')
 def test_delete_board(driver: webdriver, api_client: BoardApi, test_data: DataProvider):
     
@@ -59,6 +62,7 @@ def test_delete_board(driver: webdriver, api_client: BoardApi, test_data: DataPr
 
     assert before_delete > after_delete
 
+@pytest.mark.ui
 @allure.step('Добавление карточки на доску')
 def test_add_card_to_board(driver: webdriver, api_client: BoardApi, test_data: DataProvider):
     
@@ -81,7 +85,8 @@ def test_add_card_to_board(driver: webdriver, api_client: BoardApi, test_data: D
     assert cards[0]['name'] == card_name
     
     api_client.delete_board_by_id(boardid)
-    
+  
+@pytest.mark.ui
 @allure.step('Редактирование карточки')
 def test_update_card(driver: webdriver, api_client: BoardApi, test_data: DataProvider):
 
@@ -105,7 +110,8 @@ def test_update_card(driver: webdriver, api_client: BoardApi, test_data: DataPro
     assert 2 == 2
     
     api_client.delete_board_by_id(boardid)
-    
+
+@pytest.mark.ui   
 @allure.step('Удаление карточки')
 def test_delete_card(driver: webdriver, api_client: BoardApi, test_data: DataProvider):
 
@@ -131,6 +137,7 @@ def test_delete_card(driver: webdriver, api_client: BoardApi, test_data: DataPro
     
     api_client.delete_board_by_id(test_board['id'])
 
+@pytest.mark.ui
 @allure.step('Перемещение карточки в другую колонку')
 def test_move_card(driver: webdriver, api_client: BoardApi, test_data: DataProvider):
     

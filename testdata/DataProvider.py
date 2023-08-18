@@ -1,6 +1,6 @@
 import json
 
-my_file = open(file='test_data.json', mode='r', encoding='utf_8')
+my_file = open(file='testdata/test_data.json', mode='r', encoding='utf_8')
 global_data = json.load(my_file)
 
 class DataProvider:

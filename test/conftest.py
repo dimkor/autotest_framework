@@ -4,13 +4,27 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from api.BoardApi import BoardApi
 from testdata.DataProvider import DataProvider
+from configuration.ConfigProvider import ConfigProvider
+from selenium.webdriver.firefox.options import Options
 
+options = Options()
+options.page_load_strategy = 'eager'
 @pytest.fixture
 def driver():
     with allure.step('Открыть и настроить браузер'):
-        driver = webdriver.Chrome()
+        
+        timeout = ConfigProvider().getint("ui", "timeout")
+        browser_name = ConfigProvider().get("ui", "browser_name")
+        
+        if browser_name == 'chrome':
+            driver = webdriver.Chrome()
+        elif browser_name == 'ff':
+            options = Options()
+            options.set_preference('devtools.jsonview.enabled', False)
+            driver = webdriver.Firefox(options)
+
         driver.maximize_window()
-        driver.implicitly_wait(10)
+        driver.implicitly_wait(timeout)
         yield driver
         
     with allure.step("Закрыть браузер"):

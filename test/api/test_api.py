@@ -1,7 +1,9 @@
 import allure
+import pytest
 from api.BoardApi import BoardApi
 from testdata.DataProvider import DataProvider
 
+@pytest.mark.api
 @allure.step('Cоздание новой доски')
 def test_create_board(test_data: DataProvider):
 
@@ -22,6 +24,7 @@ def test_create_board(test_data: DataProvider):
 
     api.delete_board_by_id(test_board['id'])
 
+@pytest.mark.api
 @allure.step('Удаление существующей доски')
 def test_delete_board(api_client: BoardApi, test_data: DataProvider):
 
@@ -38,6 +41,7 @@ def test_delete_board(api_client: BoardApi, test_data: DataProvider):
     with allure.step('Проверка, что количество досок стало меньше'):
         assert before > after
 
+@pytest.mark.api
 @allure.step('Добавление карточки на доску')
 def test_add_card_to_board(api_client: BoardApi, test_data: DataProvider):
     
@@ -60,6 +64,7 @@ def test_add_card_to_board(api_client: BoardApi, test_data: DataProvider):
     
     api_client.delete_board_by_id(test_board['id'])
 
+@pytest.mark.api
 @allure.step('Редактирование карточки')
 def test_edit_card(api_client: BoardApi, test_data: DataProvider):
 
@@ -82,6 +87,7 @@ def test_edit_card(api_client: BoardApi, test_data: DataProvider):
      
     api_client.delete_board_by_id(test_board['id'])
 
+@pytest.mark.api
 @allure.step('Удаление карточки')
 def test_delete_card(api_client: BoardApi, test_data: DataProvider):
     
@@ -106,6 +112,7 @@ def test_delete_card(api_client: BoardApi, test_data: DataProvider):
     
     api_client.delete_board_by_id(test_board['id'])
 
+@pytest.mark.api
 @allure.step('Перемещение карточки в другую колонку')
 def test_move_card(api_client: BoardApi, test_data: DataProvider):
     
