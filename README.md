@@ -42,7 +42,9 @@
 -тесты UI:  
 ```pytest -v -m ui```  
 -тесты API:  
-```pytest -v -m api``` 
+```pytest -v -m api```   
+-все тесты  
+```pytest -v -m``` 
 
 ### Полезные ссылки
 - [Подсказка по markdown](https://www.markdownguide.org/cheat-sheet/)
