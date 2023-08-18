@@ -5,9 +5,10 @@
 ### Шаги
 1. Склонировать проект `git clone https://github.com/dimkor/autotest_framework.git`
 2. Установить все зависимости `pip install -r requirements.txt`
-3. Запустить тесты `python -m pytest`
+3. [Команды запуска тестов](#команды-запуска-тестов)
 4. Сгенерировать отчет `allure generate allure-files -o allure-report`
 5. Открыть отчет `allure open allure-report`
+
 
 ### Стек:
 - pytest
