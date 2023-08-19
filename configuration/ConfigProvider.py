@@ -1,7 +1,7 @@
 import configparser
 
 global_config = configparser.ConfigParser()
-global_config.read('test_config.ini')
+global_config.read('configuration/test_config.ini')
 
 class ConfigProvider:
     

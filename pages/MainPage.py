@@ -14,27 +14,29 @@ import urllib.parse
 
 class MainPage:
     
-    url = 'https://trello.com'
+    url = DataProvider().get('url')
+    username = DataProvider().get('username')
+    ui_token = DataProvider().get('ui_token')
     
     def __init__(self, driver: WebDriver) -> None:
         self.__driver = driver
-        self.__driver.get(self.url+'/u/automation_user/boards')
+        self.__driver.get(self.url+f'u/{self.username}/boards')
         
         with allure.step('Устанавливаем куки авторизации'):
             cookie = {
                 "name":"token",
-                "value": '64cf25acc9f789ff5ee14224/ATTSwXK8BbrO0tNOqw1gVyHkCVM0GcKzliLbTLXWKlfaQsZ26KkVbdKCelhuQqWESn8q282037AB'
+                "value": f'{self.ui_token}'
             }
             self.__driver.add_cookie(cookie)
         
         my_try = 0    
         while self.__driver.title.startswith('Ошибка'):
             with allure.step('Открываем рабочее пространство пользователя'):
-                self.__driver.get(self.url+'/u/automation_user/boards')
+                self.__driver.get(self.url+f'u/{self.username}/boards')
             #выход из цикла в том случае, если 10 раз нас постигает неудача
-            my_try = +1
+            my_try = my_try + 1
             if my_try == 9:
-                break
+                self.__driver.quit()
                 
     @allure.step('Создание доски')   
     def create_board(self, boardname: str) -> str:
